@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  p 検索内容: #{search.searchText}
+  div
+    h4 検索結果
+    if answeres.answerId
+      each answer in answeres
+        p #{answer.answerText}
+    else
+      検索までしばらく時間がかかります
+    if (user.id == search.createdBy)
+      p やあ
+    else
+      form(method="post", action="/searches/#{search.searchId}")
+        div
+          p 名前
+          input(type="text" name="answerName")
+        div
+          p 本文
+          input(type="text" name="answerText")
+        button(type="submit") 投稿

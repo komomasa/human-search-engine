@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  if (paramsUser === accessUser.id)
+    h1 ユーザー管理画面
+    a(href="#") ユーザー情報
+    p ・名前の変更
+    p ・会員情報を削除
+    h3 過去の検索一覧
+    - var hasSearch = searches.length > 0
+    if hasSearch
+      each search in searches
+        div
+          a(href="/searches/#{search.searchId}") #{search.searchText} 
+          p #{search.updatedAt} 
+          a(href="#") この投稿を削除 
+  else
+    p #{accessUser.username} 様 のユーザーページではありません
+    //- TODO redirectするからここ消す
