@@ -93,7 +93,6 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/searches', searches);
 app.use('/users', users);
-app.use('/searches', answeres);
 
 // 指定したpathで認証　・・・・③
 app.get('/auth/twitter',
