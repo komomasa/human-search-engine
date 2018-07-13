@@ -3,12 +3,11 @@ extends layout
 block content
   h1= title
   p あやふやな検索でおっけーです
-  p （現在の仕様では検索内容はだれでも見れるので個人情報は書き込まないでください）
 
   div
     form(method="post", action="/searches")
       div
-        input(type="text" name="searchText")
+        input(type="text" name="searchText" required)
         button(type="submit") 検索
   if user
     div

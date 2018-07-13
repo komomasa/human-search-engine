@@ -2,8 +2,12 @@ extends layout
 
 block content
   if (paramsUser === accessUser.id)
+    if (user.sitename === null) 
+      ようこそ #{user.username} さま
+    else
+      p ようこそ #{user.sitename} さま
     h1 ユーザー管理画面
-    a(href="#") ユーザー情報
+    a(href="/users/#{paramsUser}/edit") ユーザー情報
     p ・名前の変更
     p ・会員情報を削除
     h3 過去の検索一覧
@@ -13,7 +17,8 @@ block content
         div
           a(href="/searches/#{search.searchId}") #{search.searchText} 
           p #{search.updatedAt} 
-          a(href="#") この投稿を削除 
+          form(method="post", action="/searches/#{search.searchId}?delete=1")
+            button(type="submit") この投稿を削除
   else
     p #{accessUser.username} 様 のユーザーページではありません
     //- TODO redirectするからここ消す

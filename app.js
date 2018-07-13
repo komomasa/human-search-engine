@@ -12,6 +12,7 @@ var logout = require('./routes/logout');
 var searches = require('./routes/searches');
 var users = require('./routes/users');
 var answeres = require('./routes/answeres');
+var evaluationes = require('./routes/evaluationes');
 
 var app = express();
 app.use(helmet());
@@ -93,6 +94,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/searches', searches);
 app.use('/users', users);
+app.use('/searches', evaluationes);
 
 // 指定したpathで認証　・・・・③
 app.get('/auth/twitter',

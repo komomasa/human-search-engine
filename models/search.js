@@ -13,7 +13,9 @@ const Search = loader.database.define('searches', {
   },
   searchText: {
     type: Sequelize.TEXT,
-    allowNull: false
+    allowNull: false,
+    defaultValue: null,
+    validate: { min: 1 }
   },
   createdBy: {
     type: Sequelize.BIGINT,

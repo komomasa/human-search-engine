@@ -8,8 +8,6 @@ block content
       each answer in answeres
         div
           a(href="/searches/#{answer.searchId}/answers/#{answer.answerId}") #{answer.answerText}
-          a(href="/searches/") __いいね！
-
     else
       検索までしばらく時間がかかります
     if (user.id == search.createdBy)

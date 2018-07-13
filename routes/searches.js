@@ -7,6 +7,7 @@ const Search = require('../models/search');
 const Answer = require('../models/answer');
 const User = require('../models/user');
 const Evaluation = require('../models/evaluation');
+const Comment = require('../models/comment');
 
 router.post('/', authenticationEnsurer, (req, res, next) => {
   const searchId = uuid.v4();
@@ -22,7 +23,12 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
   });
 });
 
-router.post('/:searchId', (req, res, next) => {
+router.post('/:searchId', authenticationEnsurer, (req, res, next) => {
+  if (parseInt(req.query.delete) === 1) {
+    deleteSearch(req.params.searchId, () => {
+      res.redirect('/');
+    });
+  } else {
   const updatedAt = new Date();
   Answer.create({
     answerName: req.body.answerName, //ここ匿名化の処置してもいいかも
@@ -33,6 +39,7 @@ router.post('/:searchId', (req, res, next) => {
     res.redirect('/searches/' + answer.searchId); 
     console.log(req.body); // TODO 予定と候補を保存する実装をする
   });
+  }
 });
 
 router.get('/:searchId', (req, res, next) => {
@@ -89,6 +96,7 @@ router.get('/:searchId', (req, res, next) => {
   });
 });
 
+
 router.get('/:searchId/answers/:answerId', (req, res, next) => {
   Answer.findOne({
      where: { searchId: req.params.searchId,
@@ -106,6 +114,34 @@ router.get('/:searchId/answers/:answerId', (req, res, next) => {
          }
       });
     });
+
+function deleteSearch(searchId, done, err) {
+  const promiseCommentDestroy = Comment.findAll({
+    where: { searchId: searchId }
+  }).then((comments) => {
+    return Promise.all(comments.map((c) => { return c.destroy(); }));
+  });
+  Evaluation.findAll({
+    where: { searchId: searchId }
+  }).then((evaluationes) => {
+    const promises = evaluationes.map((a) => { return a.destroy(); });
+    return Promise.all(promises);
+  }).then(() => {
+    Answer.findAll({
+      where: { searchId: searchId }
+    }).then((answeres) => {
+      const finishpromises = answeres.map((b) => { return b.destroy(); });
+    }).then(() => {
+      Search.findOne({
+        where: { searchId: searchId }
+      }).then((search) => {
+        search.destroy(); 
+        if (err) return done(err);
+        done();
+      });
+    });
+  });
+};
 
   
 module.exports = router;
