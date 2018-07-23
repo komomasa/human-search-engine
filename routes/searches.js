@@ -9,6 +9,21 @@ const User = require('../models/user');
 const Evaluation = require('../models/evaluation');
 const Comment = require('../models/comment');
 
+router.get('/', (req, res, next) => {
+  Search.findAll({
+    include:  {
+        model: User,
+        attributes: ['userId', 'username', 'sitename']
+      },
+      order: '"updatedAt" DESC' 
+  }).then((searches) => {
+    res.render('searches', {
+      searches: searches,
+      user: req.user
+    });
+  });
+});
+
 router.post('/', authenticationEnsurer, (req, res, next) => {
   const searchId = uuid.v4();
   const updatedAt = new Date();
@@ -18,15 +33,15 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
     createdBy: req.user.id,
     updatedAt: updatedAt
   }).then((search) => {
-    res.redirect('/users/' + search.createdBy); //usersの個別ページに飛ばす
+    res.redirect('/users'); //usersの個別ページに飛ばす
     console.log(req.body); // TODO 予定と候補を保存する実装をする
   });
 });
 
-router.post('/:searchId', authenticationEnsurer, (req, res, next) => {
+router.post('/:searchId', (req, res, next) => {
   if (parseInt(req.query.delete) === 1) {
     deleteSearch(req.params.searchId, () => {
-      res.redirect('/');
+      res.redirect('/users');
     });
   } else {
   const updatedAt = new Date();

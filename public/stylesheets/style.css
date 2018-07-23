@@ -1,8 +1,25 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
 
-a {
-  color: #00B7FF;
+.example {
+  margin: 20px 0 0 0;
+  text-align: center;
+}
+.search-example {
+  width: 40%;
+  text-align: center;
+  margin: 0 5% 0 5%;
+  padding: 4%;
+}
+.search-icon {
+  text-align: center;
+  margin-bottom: 2%;
+}
+.search-text {
+  padding: 1%;
+  border: solid 1px;
+}
+.text-memo {
+  text-decoration: underline;
+  padding: 5px;
+  letter-spacing: 0.5px;
+  line-height: 120%;
 }

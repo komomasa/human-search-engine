@@ -1,15 +1,27 @@
 extends layout
 
 block content
-  h1= title
-  p あやふやな検索でおっけーです
+  div(class="page-header")
+    h2 人力検索エンジン（仮）
+    h5 あやふやなアイデアを形にするサービス
 
   div
     form(method="post", action="/searches")
+      div(class="form-group")
+        label(for="searchText" class="sr-only")
+        textarea(id="searchText" rows="3" class="form-control" type="text" name="searchText" required)
+        button(class="btn btn-info btn1 btn-block" type="submit")<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+
       div
-        input(type="text" name="searchText" required)
-        button(type="submit") 検索
-  if user
-    div
-      p #{user.username}としてログイン中
-      a(href="/users/#{user.id}") 〇
+        a(href="/searches") ＞＞質問に答えてみる
+      
+      div(class="row")
+        p(class="example") たとえばこんな検索をしてみてください
+        div(class="search-example col-md-6")
+          div(class="search-icon")
+            button(class="btn btn-success btn1 btn-block" disabled="disabled")<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <h3 class="text-memo" style="width:100%;background:#fff;font-size:11pt;color:#1f3134;-webkit-box-shadow:1px 1px 1px 1px rgba(0,0,0,0.1),15px 15px 0 -5px #fff,15px 15px 1px -4px rgba(0,0,0,0.2);-moz-box-shadow:1px 1px 1px 1px rgba(0,0,0,0.1),15px 15px 0 -5px #fff,15px 15px 1px -4px rgba(0,0,0,0.2);box-shadow:1px 1px 1px 1px rgba(0,0,0,0.1),15px 15px 0 -5px #fff,15px 15px 1px -4px rgba(0,0,0,0.2);padding:30px;">私は今アパレルのWebサイトを作っています.そのサイト内で自社商品を販売しようと思っているのですが、決算方法としてクレジットカードを導入したいです。サイト自体はRubyonRailsを使って構築しています。いい方法があれば手掛かりをください。</h3>
+        div(class="search-example col-md-6")
+          div(class="search-icon")
+            button(class="btn btn-warning btn1 btn-block" disabled="disabled")<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <h3 class="text-memo" style="width:100%;background:#fff;font-size:11pt;color:#1f3134;-webkit-box-shadow:1px 1px 1px 1px rgba(0,0,0,0.1),15px 15px 0 -5px #fff,15px 15px 1px -4px rgba(0,0,0,0.2);-moz-box-shadow:1px 1px 1px 1px rgba(0,0,0,0.1),15px 15px 0 -5px #fff,15px 15px 1px -4px rgba(0,0,0,0.2);box-shadow:1px 1px 1px 1px rgba(0,0,0,0.1),15px 15px 0 -5px #fff,15px 15px 1px -4px rgba(0,0,0,0.2);padding:30px;">これを初心者が実装するのは難しいですか？どういった技術を習得する必要がありますか？ユーザーがサイト内のボタンを押すと、ユーザーの位置情報を取得して周辺の空きのある飲食店を紹介するサービスを作ってみたいです。</h3>
