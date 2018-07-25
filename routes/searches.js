@@ -17,10 +17,17 @@ router.get('/', (req, res, next) => {
       },
       order: '"updatedAt" DESC' 
   }).then((searches) => {
+    if (req.user) {
     res.render('searches', {
       searches: searches,
       user: req.user
     });
+  } else {
+    res.render('searches', {
+      searches: searches,
+      user: 0
+    });
+  }
   });
 });
 

@@ -6,10 +6,8 @@ block content
       ようこそ #{user.username} さま
     else
       p ようこそ #{user.sitename} さま
-    h1 ユーザー管理画面
-    a(href="/users/edit") ユーザー情報
-    p ・名前の変更
-    p ・会員情報を削除
+    h1(class="user") ユーザー管理画面
+    a(href="/users/edit") ユーザー情報の編集、退会
   else
     p #{accessUser.username} 様 のユーザーページではありません
     //- TODO redirectするからここ消す
