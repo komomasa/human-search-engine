@@ -1,0 +1,13 @@
+extends layout
+block content
+
+  h2(class="my-2") 過去の検索一覧
+  - var hasSearch = searches.length > 0
+    if hasSearch
+      each search in searches
+        div(class="my-3")
+          a(href="/searches/req/#{search.searchId}") #{search.searchText} 
+          p #{search.formattedUpdatedAt} 
+          form(method="post", action="/searches/#{search.searchId}?delete=1")
+            input(type="hidden" name="_csrf" value!="#{csrfToken}")
+            button(class="btn btn-danger" type="submit") この投稿を削除

@@ -1,0 +1,9 @@
+extends layout
+
+block content
+ 
+  div
+      h3(class="my-3") 退会する
+  form(method="post", action="/users?delete=1")
+    input(type="hidden" name="_csrf" value!="#{csrfToken}")
+    button(class="btn btn-danger" type="submit") 退会する（押すと会員情報すべて消去します)

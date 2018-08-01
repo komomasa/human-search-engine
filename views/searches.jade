@@ -1,0 +1,78 @@
+extends layout
+
+block content
+  div
+    h3(class="text-center m-3") 検索一覧
+  div
+    each search in searches
+      div(class="m-3")
+        ul(class="list-unstyled")
+          li(class="media")
+            img(class="mr-3 img-fluid img-thumbnail img-size" src="../images/1.PNG" alt="Generic placeholder image")
+            div(class="media-body")
+              
+              if search.user.sitename
+                h5(class="mt-0 mb-1") #{search.user.sitename}
+                a(href="/searches/req/#{search.searchId}") #{search.searchText}
+              else
+                h5(class="mt-0 mb-1") #{search.user.username}
+                a(href="/searches/req/#{search.searchId}") #{search.searchText}
+
+        div(class="panel panel-default mb-5")
+          div(class="search-answer panel-body")
+            if (user ==  0) || (user.id != search.createdBy) 
+              form(method="post", action="/searches/#{search.searchId}")
+                div(class="form-group")
+                  label(for="answerText" class="sr-only")
+                  textarea(id="answerText" rows="3" class="form-control" type="text" name="answerText" required)
+                  input(type="hidden" name="_csrf" value!="#{csrfToken}")
+                  button(class="btn btn-info btn-block pull-right" type="submit")<span class="glyphicon glyphicon-pencil" aria-hidden="true">答える</span>
+            else
+              form(method="post", action="/searches/#{search.searchId}")
+                div(class="form-group")
+                  label(for="answerText" class="sr-only")
+                  textarea(id="answerText" rows="3" class="form-control" type="text" name="answerText" required disabled)
+                  input(type="hidden" name="_csrf" value!="#{csrfToken}")
+                  button(class="btn btn-danger btn-block pull-right" type="submit" disabled="disabled")<span class="glyphicon glyphicon-pencil" aria-hidden="true">★自身の投稿です</span>
+              if admin
+                form(method="post", action="/searches/#{search.searchId}?delete=1")
+                  input(type="hidden" name="_csrf" value!="#{csrfToken}")
+                  button(class="btn btn-danger" type="submit") この投稿を削除
+  - var page1 = parseInt(page) - 1
+  - var page2 = parseInt(page) + 1
+    if (pages == page) && (page1 === 0) /* 最大ページが1ページの時 */
+     nav(arua-label="ページ送り")
+        ul(class="pagination justify-content-center")
+          li(class="page-item active")
+            a(class="page-link" href="/searches/#{page}") #{page}
+    else if (page1 === 0) /* 前のページが存在しないとき（1ページ目） */
+      nav(arua-label="ページ送り")
+        ul(class="pagination justify-content-center")
+          li(class="page-item active")
+            a(class="page-link" href="/searches/#{page}") #{page}
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page2}") #{page2}
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page2}") 次へ
+    else if (pages <= page) /* 最大ページ数に到達したとき */
+      nav(arua-label="ページ送り")
+        ul(class="pagination justify-content-center")
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page1}") 前へ
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page1}") #{page1}
+          li(class="page-item active")
+            a(class="page-link" href="/searches/#{page}") #{page}
+    else
+      nav(arua-label="ページ送り")
+        ul(class="pagination justify-content-center")
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page1}") 前へ
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page1}") #{page1}
+          li(class="page-item active")
+            a(class="page-link" href="/searches/#{page}") #{page}
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page2}") #{page2}
+          li(class="page-item")
+            a(class="page-link" href="/searches/#{page2}") 次へ

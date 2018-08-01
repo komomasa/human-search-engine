@@ -1,0 +1,7 @@
+{
+  "name": "human-search-engine",
+  "description": "人力検索エンジン",
+  "logo": "",
+  "keywords": ["node"],
+  "image": "heroku/nodejs"
+}
