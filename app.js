@@ -53,7 +53,7 @@ passport.deserializeUser((obj, callback) => {
 passport.use(new TwitterStrategy({
   consumerKey: TWITTER_CONSUMER_KEY,
   consumerSecret: TWITTER_CONSUMER_SECRET,
-  callbackURL: "http://localhost:8000/auth/twitter/callback",
+  callbackURL: process.env.HEROKU_URL ? process.env.HEROKU_URL + 'auth/twitter/callback' : 'http://localhost:8000/auth/twitter/callback',
   includeEmail: true 
 }, 
 // 認証後のアクション 6/30
