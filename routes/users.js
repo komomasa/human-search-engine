@@ -7,8 +7,10 @@ const User = require('../models/user');
 const Comment = require('../models/comment');
 const Evaluation = require('../models/evaluation');
 const moment = require('moment-timezone');
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
 
-router.get('/', authenticationEnsurer, (req, res, next) => {
+router.get('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
     Search.findAll({
       include: [
         {
@@ -31,7 +33,8 @@ router.get('/', authenticationEnsurer, (req, res, next) => {
             accessUser: req.user,
             searches: searches,
             paramsUser: req.user.id,
-            user: user
+            user: user,
+            csrfToken: req.csrfToken()
           });
         } else {
           const err = new Error('指定された予定は見つかりません');
@@ -42,7 +45,7 @@ router.get('/', authenticationEnsurer, (req, res, next) => {
     });
   });
 
-  router.get('/searches', authenticationEnsurer, (req, res, next) => {
+  router.get('/searches', authenticationEnsurer, csrfProtection, (req, res, next) => {
     Search.findAll({
       include: [
         {
@@ -65,7 +68,8 @@ router.get('/', authenticationEnsurer, (req, res, next) => {
             accessUser: req.user,
             searches: searches,
             paramsUser: req.user.id,
-            user: user
+            user: user,
+            csrfToken: req.csrfToken()
           });
         } else {
           const err = new Error('指定された予定は見つかりません');
@@ -76,7 +80,7 @@ router.get('/', authenticationEnsurer, (req, res, next) => {
     });
   });
 
-router.get('/edit', authenticationEnsurer, (req, res, next) => {
+router.get('/edit', authenticationEnsurer, csrfProtection, (req, res, next) => {
   User.findOne({
     where: {
       userId: req.user.id
@@ -86,6 +90,7 @@ router.get('/edit', authenticationEnsurer, (req, res, next) => {
       res.render('edit', {
         accessUser: req.user,
         user: user,
+        csrfToken: req.csrfToken()
       });
     } else {
       const err = new Error('あなたはこのユーザーではありません');
@@ -95,7 +100,7 @@ router.get('/edit', authenticationEnsurer, (req, res, next) => {
   });
 });
 
-router.post('/', authenticationEnsurer, (req, res, next) => {
+router.post('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
   if (parseInt(req.query.edit) === 1) {
     User.findOne({
       where: {

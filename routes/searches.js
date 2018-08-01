@@ -9,8 +9,14 @@ const User = require('../models/user');
 const Evaluation = require('../models/evaluation');
 const Comment = require('../models/comment');
 const Admin_User_Id = parseInt(process.env.ADMIN_USER_ID);
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
 
-router.get('/:page', (req, res, next) => {
+router.get('/', (req, res, next) => {
+  res.redirect('/searches/1');
+});
+
+router.get('/:page', csrfProtection, (req, res, next) => {
   let limit = 10;   // number of records per page
   let offset = 0;
   Search.findAndCountAll().then((data) => { 
@@ -34,14 +40,16 @@ router.get('/:page', (req, res, next) => {
              user: req.user,
              count: data.count,
              pages: pages,
-             admin: true
+             admin: true,
+             csrfToken: req.csrfToken()
            });
          } else { res.render('searches', {
           searches: searches,
           page: req.params.page,
           user: req.user,
           count: data.count,
-          pages: pages
+          pages: pages,
+          csrfToken: req.csrfToken()
         })};
      } else {
       res.render('searches', {
@@ -49,7 +57,8 @@ router.get('/:page', (req, res, next) => {
         page: req.params.page,
         user: 0,
         count: data.count,
-        pages: pages
+        pages: pages,
+        csrfToken: req.csrfToken()
       });
     }
     }).catch(function (error) {
@@ -58,7 +67,7 @@ router.get('/:page', (req, res, next) => {
 });
 });
 
-router.post('/', authenticationEnsurer, (req, res, next) => {
+router.post('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
   const searchId = uuid.v4();
   const updatedAt = new Date();
   Search.create({
@@ -72,7 +81,7 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
   });
 });
 
-router.post('/:searchId', (req, res, next) => {
+router.post('/:searchId', csrfProtection, (req, res, next) => {
   if (parseInt(req.query.delete) === 1) {
     if (req.user) {
     deleteSearch(req.params.searchId, () => {
@@ -97,7 +106,7 @@ router.post('/:searchId', (req, res, next) => {
   }
 });
 
-router.get('/req/:searchId', (req, res, next) => {
+router.get('/req/:searchId', csrfProtection, (req, res, next) => {
   Search.findOne({
     include: [
       {
@@ -130,7 +139,8 @@ router.get('/req/:searchId', (req, res, next) => {
                  search: search,
                  answeres: answeres,
                  users: [req.user],
-                 evaluationes: evaluationes
+                 evaluationes: evaluationes,
+                 csrfToken: req.csrfToken()
                });
              } else { //ログインしていないユーザーの場合userに0を渡している
                res.render('search', {
@@ -138,7 +148,8 @@ router.get('/req/:searchId', (req, res, next) => {
                  search: search,
                  answeres: answeres,
                  users: [req.user],
-                 evaluationes: evaluationes
+                 evaluationes: evaluationes,
+                 csrfToken: req.csrfToken()
                });
              }
         });

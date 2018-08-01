@@ -3,25 +3,23 @@ extends layout
 block content
   if (paramsUser === accessUser.id)
     if (user.sitename === null) 
-      p ようこそ #{user.username} さま
+      p(class="my-2") ようこそ #{user.username} さま
     else
-      p ようこそ #{user.sitename} さま
+      p(class="my-2") ようこそ #{user.sitename} さま
     h1(class="user") ユーザー管理画面
   else
     p #{accessUser.username} 様 のユーザーページではありません
     //- TODO redirectするからここ消す
-
+  div(class="my-3")
+      h5 名前 
+      if !(user.sitename)
+        p まだ名前が入力されていません
   form(method="post", action="/users?edit=1")
     div
-      h5 名前 
-      if (user.sitename)
-        p #{user.sitename}
-      else
-        p まだ名前が入力されていません
-    div
-      input(type="text" name="sitename" value="#{user.sitename}")
+      input(type="text" name="sitename")
       input(type="hidden" name="username" value="#{user.username}")
+      input(type="hidden" name="_csrf" value!="#{csrfToken}")
     div
-      button(type="submit") ユーザー名を編集する
-  div(class="my-5")
+      button(class="my-1 btn btn-info" type="submit") ユーザー名を編集する
+  div(class="my-3")
       a(href="/users/edit") このサイトを退会する

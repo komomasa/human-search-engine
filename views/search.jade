@@ -18,4 +18,5 @@ block content
         div(class="form-group my-3")
           label(for="answerText" class="sr-only")
           textarea(id="answerText" rows="3" class="form-control" type="text" name="answerText" required)
+          input(type="hidden" name="_csrf" value!="#{csrfToken}")
           button(class="btn btn-info btn-block pull-right" type="submit")<span class="glyphicon glyphicon-pencil" aria-hidden="true">答える</span>

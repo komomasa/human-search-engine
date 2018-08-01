@@ -2,9 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const Search = require('../models/search');
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
 
 /* GET home page. */
-router.get('/', (req, res, next) => {
+router.get('/',csrfProtection, (req, res, next) => {
   const title = '人力検索エンジン';
   if (req.user) {
     Search.findAll({
@@ -16,11 +18,12 @@ router.get('/', (req, res, next) => {
       res.render('index', {
         title: title,
         user: req.user,
-        searches: searches
+        searches: searches,
+        csrfToken: req.csrfToken()
       });
     });
   } else {
-    res.render('index', { title: title, user: req.user });
+    res.render('index', { title: title, user: req.user, csrfToken: req.csrfToken });
   }
 });
 
