@@ -8,27 +8,54 @@ const Answer = require('../models/answer');
 const User = require('../models/user');
 const Evaluation = require('../models/evaluation');
 const Comment = require('../models/comment');
+const Admin_User_Id = parseInt(process.env.ADMIN_USER_ID);
 
-router.get('/', (req, res, next) => {
-  Search.findAll({
-    include:  {
+router.get('/:page', (req, res, next) => {
+  let limit = 10;   // number of records per page
+  let offset = 0;
+  Search.findAndCountAll().then((data) => { 
+    let page = req.params.page;      // page number
+    let pages = Math.ceil(data.count / limit);
+    offset = limit * (page - 1);
+    Search.findAll({
+      include:  {
         model: User,
         attributes: ['userId', 'username', 'sitename']
       },
-      order: '"updatedAt" DESC' 
-  }).then((searches) => {
-    if (req.user) {
-    res.render('searches', {
-      searches: searches,
-      user: req.user
-    });
-  } else {
-    res.render('searches', {
-      searches: searches,
-      user: 0
-    });
-  }
-  });
+      limit: limit,
+      offset: offset,
+      order: '"updatedAt" DESC'
+    }).then((searches) => {
+       if (req.user) {
+         if (parseInt(req.user.id) === Admin_User_Id) {
+           res.render('searches', {
+             searches: searches,
+             page: req.params.page,
+             user: req.user,
+             count: data.count,
+             pages: pages,
+             admin: true
+           });
+         } else { res.render('searches', {
+          searches: searches,
+          page: req.params.page,
+          user: req.user,
+          count: data.count,
+          pages: pages
+        })};
+     } else {
+      res.render('searches', {
+        searches: searches,
+        page: req.params.page,
+        user: 0,
+        count: data.count,
+        pages: pages
+      });
+    }
+    }).catch(function (error) {
+    res.status(500).send('Internal Server Error');
+	});
+});
 });
 
 router.post('/', authenticationEnsurer, (req, res, next) => {
@@ -40,16 +67,22 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
     createdBy: req.user.id,
     updatedAt: updatedAt
   }).then((search) => {
-    res.redirect('/users'); //usersの個別ページに飛ばす
+    res.redirect('/searches/1'); //usersの個別ページに飛ばす
     console.log(req.body); // TODO 予定と候補を保存する実装をする
   });
 });
 
 router.post('/:searchId', (req, res, next) => {
   if (parseInt(req.query.delete) === 1) {
+    if (req.user) {
     deleteSearch(req.params.searchId, () => {
-      res.redirect('/users');
+      res.redirect('/users/searches');
     });
+    } else {
+      const err = new Error('削除権限がありません');
+      err.status = 404;
+      next(err);
+    };
   } else {
   const updatedAt = new Date();
   Answer.create({
@@ -58,13 +91,13 @@ router.post('/:searchId', (req, res, next) => {
     searchId: req.params.searchId,
     updatedAt: updatedAt
   }).then((answer) => {
-    res.redirect('/searches/' + answer.searchId); 
+    res.redirect('/searches/req/' + answer.searchId); 
     console.log(req.body); // TODO 予定と候補を保存する実装をする
   });
   }
 });
 
-router.get('/:searchId', (req, res, next) => {
+router.get('/req/:searchId', (req, res, next) => {
   Search.findOne({
     include: [
       {
@@ -119,7 +152,7 @@ router.get('/:searchId', (req, res, next) => {
 });
 
 
-router.get('/:searchId/answers/:answerId', (req, res, next) => {
+router.get('/req/:searchId/answers/:answerId', (req, res, next) => {
   Answer.findOne({
      where: { searchId: req.params.searchId,
               answerId: req.params.answerId },
@@ -138,6 +171,7 @@ router.get('/:searchId/answers/:answerId', (req, res, next) => {
     });
 
 function deleteSearch(searchId, done, err) {
+
   const promiseCommentDestroy = Comment.findAll({
     where: { searchId: searchId }
   }).then((comments) => {
@@ -165,5 +199,9 @@ function deleteSearch(searchId, done, err) {
   });
 };
 
+
+function isAdmin(req) {
+  return parseInt(req.userId) === process.env.ADMIN_USER_ID;
+}
   
 module.exports = router;

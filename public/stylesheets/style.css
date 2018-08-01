@@ -1,4 +1,4 @@
-
+/* 
 .example {
   margin: 20px 0 0 0;
   text-align: center;
@@ -38,4 +38,9 @@
 }
 .user {
   margin-bottom: 2%;
+} */
+
+.img-size {
+  width: 64px;
+  height: 64px;
 }

@@ -1,20 +1,21 @@
 extends layout
 
 block content
-  p  #{search.searchText}
+  p  #{search.searchText} の検索...
+  -var length = answeres.length
+  p #{length}件の検索結果が見つかりました
   div
     h4 検索結果
     if answeres
       each answer in answeres
-        div
+        div(class="my-3")
           a(href="/searches/#{answer.searchId}/answers/#{answer.answerId}") #{answer.answerText}
     else
       検索までしばらく時間がかかります
     if (user.id == search.createdBy)
-      p やあ
     else
       form(method="post", action="/searches/#{search.searchId}")
-        div
-          p 本文
-          input(type="text" name="answerText")
-        button(type="submit") 投稿
+        div(class="form-group my-3")
+          label(for="answerText" class="sr-only")
+          textarea(id="answerText" rows="3" class="form-control" type="text" name="answerText" required)
+          button(class="btn btn-info btn-block pull-right" type="submit")<span class="glyphicon glyphicon-pencil" aria-hidden="true">答える</span>

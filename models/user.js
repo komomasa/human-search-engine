@@ -14,6 +14,9 @@ const User = loader.database.define('users', {
   },
   sitename: {
     type: Sequelize.STRING
+  },
+  profileImage: {
+    type: Sequelize.STRING
   }
 }, {
     freezeTableName: true,
