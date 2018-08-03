@@ -44,3 +44,29 @@
   width: 64px;
   height: 64px;
 }
+
+.login{
+  background:#1DA1F2 ;
+  width: 300px;
+  margin: auto;
+  margin-top: 5%;
+  padding-right: 20px;
+  text-align: center;
+  font-size: 100%;
+  position: relative;
+}
+.login a {
+  color: #FFFFFF;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height:100%;
+  width: 100%;
+  padding-top: 5%;
+  padding-left: 5%;
+}
+.login img{
+  height: 60px;
+  padding-right: 50%;
+}

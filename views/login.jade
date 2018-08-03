@@ -1,6 +1,13 @@
 extends layout
 
 block content
-  a(href="/auth/twitter") Twitterでログイン
+  h3(class="mt-4 text-center") ログイン画面
+  div(class="login")
+      img(src="../images/Twitter_Logo_WhiteOnBlue.png") 
+      a(href="/auth/twitter") Twitterでログイン
   if user
      p 現在 #{user.username} でログイン中
+
+  p(class="mt-5 text-center")  
+    u「人力検索エンジン」を使用する際には以下の利用規約に同意したものとみなされます。
+  p(class="mt-2 text-center") ごめんなさい！！！！誠意作成中です！！！！

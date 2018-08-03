@@ -61,10 +61,11 @@ passport.use(new TwitterStrategy({
   process.nextTick(() => {
       User.upsert({
         userId: profile.id,
-        username: profile.username
+        username: profile.username,
+        sitename: profile.displayName,
+        profileImage: profile._json.profile_image_url_https
       }).then(() => {
         callback(null, profile);
-        console.log('ログイン成功') //必要に応じて変更
       });
   });
 }));

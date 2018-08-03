@@ -26,7 +26,7 @@ router.get('/:page', csrfProtection, (req, res, next) => {
     Search.findAll({
       include:  {
         model: User,
-        attributes: ['userId', 'username', 'sitename']
+        attributes: ['userId', 'username', 'sitename', 'profileImage']
       },
       limit: limit,
       offset: offset,
